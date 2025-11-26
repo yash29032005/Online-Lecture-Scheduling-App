@@ -13,7 +13,7 @@ const Sidebar = ({ menu, open, setOpen }) => {
 
   return (
     <>
-      {/* MOBILE OVERLAY */}
+      {/* Mobile overlay */}
       {isMobile && open && (
         <div
           className="fixed inset-0 bg-black/40 z-30 "
@@ -21,7 +21,7 @@ const Sidebar = ({ menu, open, setOpen }) => {
         ></div>
       )}
 
-      {/* SIDEBAR */}
+      {/* Sideeebar */}
       <aside
         className={`
           bg-secondary text-white h-screen w-64 fixed left-0 top-0 z-40
@@ -35,18 +35,17 @@ const Sidebar = ({ menu, open, setOpen }) => {
           }
         `}
       >
-        {/* TOP LOGO */}
+        {/* Logo */}
         <div className="p-4 text-xl h-[70px] font-bold flex items-center">
           <span className="px-4 py-2 bg-ternary rounded-md">OLS</span>
         </div>
 
-        {/* NAVIGATION */}
+        {/* navigaation */}
         <nav className="mt-4">
           {menu.map((item, i) => (
             <div key={i}>
               {item.children ? (
                 <>
-                  {/* PARENT WITH DROPDOWN */}
                   <button
                     onClick={() =>
                       setOpenDropdown(openDropdown === i ? null : i)
@@ -69,7 +68,7 @@ const Sidebar = ({ menu, open, setOpen }) => {
                     </svg>
                   </button>
 
-                  {/* CHILDREN */}
+                  {/* children */}
                   {openDropdown === i && (
                     <div className="ml-10 mt-1">
                       {item.children.map((child, j) => (
@@ -86,7 +85,6 @@ const Sidebar = ({ menu, open, setOpen }) => {
                   )}
                 </>
               ) : (
-                /* NORMAL ITEM */
                 <Link
                   to={item.path}
                   className="block px-4 py-3 hover:bg-gray-700"

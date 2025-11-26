@@ -6,19 +6,16 @@ import axiosClient from "../utils/AxiosClient";
 
 const AuthPage = () => {
   const { setUser } = useAuth();
-  const [tab, setTab] = useState("login"); // login | signup(instructor only)
+  const [tab, setTab] = useState("login");
 
-  const [role, setRole] = useState("admin"); // selected role for login only
+  const [role, setRole] = useState("admin");
 
-  const [name, setName] = useState(""); // for signup
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
 
-  // ----------------------------------------------------------
-  // LOGIN FUNCTION
-  // ----------------------------------------------------------
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -36,7 +33,6 @@ const AuthPage = () => {
 
       toast.success(result.data.message);
 
-      // Redirect based on role returned from backend
       if (user.role === "admin") navigate("/admin");
       else if (user.role === "instructor") navigate("/instructor");
       else navigate("/");
@@ -48,9 +44,6 @@ const AuthPage = () => {
     }
   };
 
-  // ----------------------------------------------------------
-  // SIGNUP (Instructor Only)
-  // ----------------------------------------------------------
   const handleSignup = async (e) => {
     e.preventDefault();
 
@@ -65,7 +58,7 @@ const AuthPage = () => {
       setName("");
       setEmail("");
       setPassword("");
-      setTab("login"); // after signup → go to login
+      setTab("login");
     } catch (error) {
       toast.error(error.response?.data?.message || "Signup failed");
     }
@@ -74,7 +67,6 @@ const AuthPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-b from-primary to-secondary p-4">
       <div className="bg-primary backdrop-blur-lg shadow-xl rounded-2xl p-10 w-full max-w-md border border-gray-700">
-        {/* ICON */}
         <div className="flex justify-center mb-4">
           <div className="bg-secondary p-4 rounded-full shadow-lg">
             <svg
@@ -93,7 +85,6 @@ const AuthPage = () => {
           {tab === "login" ? "Sign in to your account" : "Instructor Sign Up"}
         </p>
 
-        {/* TABS */}
         <div className="flex mb-6 bg-secondary rounded-xl overflow-hidden">
           <button
             className={`w-1/2 py-2 font-semibold ${
@@ -114,9 +105,6 @@ const AuthPage = () => {
           </button>
         </div>
 
-        {/* ----------------------------------------------------------
-            LOGIN FORM
-        ---------------------------------------------------------- */}
         {tab === "login" && (
           <form onSubmit={handleLogin}>
             <label className="text-grey">Email</label>
@@ -139,7 +127,6 @@ const AuthPage = () => {
               required
             />
 
-            {/* LOGIN ROLE SELECTOR */}
             <label className="text-grey block mb-2">Login As</label>
             <div className="flex gap-4 mb-4">
               <button
@@ -173,9 +160,6 @@ const AuthPage = () => {
           </form>
         )}
 
-        {/* ----------------------------------------------------------
-            SIGNUP FORM — ONLY FOR INSTRUCTOR
-        ---------------------------------------------------------- */}
         {tab === "signup" && (
           <form onSubmit={handleSignup}>
             <label className="text-grey">Full Name</label>
@@ -208,7 +192,6 @@ const AuthPage = () => {
               required
             />
 
-            {/* Role is always instructor for signup */}
             <button className="w-full bg-ternary hover:bg-secondary text-white p-3 rounded-lg font-semibold">
               Create Instructor Account
             </button>

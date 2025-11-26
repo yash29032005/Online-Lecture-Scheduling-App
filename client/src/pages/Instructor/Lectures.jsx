@@ -29,7 +29,6 @@ const Lectures = () => {
     fetchMyLectures();
   }, [instructorId]);
 
-  // ---------- Pagination ----------
   const [page, setPage] = useState(1);
   const perPage = 4;
 
@@ -49,7 +48,6 @@ const Lectures = () => {
       <div className="font-bold text-lg my-4 ms-4">MY LECTURES</div>
 
       <div className="p-4 bg-secondary rounded-lg">
-        {/* ---------- TOP BAR ---------- */}
         <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
           <input
             type="text"
@@ -60,7 +58,6 @@ const Lectures = () => {
           />
         </div>
 
-        {/* ---------- TABLE ---------- */}
         <div className="mt-6 overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -105,7 +102,6 @@ const Lectures = () => {
           </table>
         </div>
 
-        {/* ---------- PAGINATION ---------- */}
         {totalPages > 1 && (
           <div className="flex justify-center mt-4 gap-2">
             <button

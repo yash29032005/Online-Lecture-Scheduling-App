@@ -10,7 +10,6 @@ const Navbar = ({ setOpen }) => {
   const [dropdown, setDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(e) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -21,7 +20,6 @@ const Navbar = ({ setOpen }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // LOGOUT
   const handleLogout = () => {
     localStorage.removeItem("token");
     setUser(null);
@@ -64,7 +62,7 @@ const Navbar = ({ setOpen }) => {
 
       <div></div>
 
-      {/* USER DROPDOWN */}
+      {/* User dropdoen */}
       <div className="relative flex items-center gap-4" ref={dropdownRef}>
         <FiMaximize className="text-2xl" onClick={toggleFullscreen} />
         <button

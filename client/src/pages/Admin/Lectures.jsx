@@ -49,7 +49,6 @@ const Lectures = () => {
 
       toast.success(result.data.message);
 
-      // Remove deleted course from UI
       setLectures((prev) => prev.filter((lec) => lec._id !== id));
     } catch (error) {
       console.log("Delete Course Error:", error);
@@ -69,9 +68,7 @@ const Lectures = () => {
       <div className="font-bold text-lg my-4 ms-4">LECTURES</div>
 
       <div className="p-4 bg-secondary rounded-lg">
-        {/* ---------- TOP BAR ---------- */}
         <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
-          {/* Search */}
           <input
             type="text"
             className="bg-ternary px-3 py-2 rounded w-full"
@@ -79,7 +76,6 @@ const Lectures = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          {/* Buttons */}
           <button
             className="px-4 py-2 bg-ternary rounded-md flex items-center gap-1"
             onClick={() => setOpenModal(true)}
@@ -89,7 +85,6 @@ const Lectures = () => {
           </button>
         </div>
 
-        {/* ---------- TABLE ---------- */}
         <div className="mt-6 overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -132,7 +127,6 @@ const Lectures = () => {
           </table>
         </div>
 
-        {/* ---------- PAGINATION ---------- */}
         <div className="flex justify-center mt-4 gap-2">
           <button
             disabled={page === 1}

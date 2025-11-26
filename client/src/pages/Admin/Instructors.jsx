@@ -48,7 +48,6 @@ const Instructors = () => {
       );
       toast.success(result.data.message);
 
-      // Remove deleted course from UI
       setInstructors((prev) => prev.filter((instruc) => instruc._id !== id));
     } catch (error) {
       console.log("Delete Course Error:", error);
@@ -69,9 +68,7 @@ const Instructors = () => {
       <div className="font-bold text-lg my-4 ms-4">INSTRUCTORS</div>
 
       <div className="p-4 bg-secondary rounded-lg">
-        {/* ---------- TOP BAR ---------- */}
         <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
-          {/* Search */}
           <input
             type="text"
             className="bg-ternary px-3 py-2 rounded w-full"
@@ -80,7 +77,6 @@ const Instructors = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
 
-          {/* Buttons */}
           <button
             className="px-4 py-2 bg-ternary rounded-md flex items-center gap-1"
             onClick={() => setOpenModal(true)}
@@ -90,7 +86,6 @@ const Instructors = () => {
           </button>
         </div>
 
-        {/* ---------- TABLE ---------- */}
         <div className="mt-6 overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -125,7 +120,6 @@ const Instructors = () => {
           </table>
         </div>
 
-        {/* ---------- PAGINATION ---------- */}
         <div className="flex justify-center mt-4 gap-2">
           <button
             disabled={page === 1}

@@ -11,7 +11,6 @@ function App() {
   return (
     <>
       <Routes>
-        {/* Login Page */}
         <Route path="/" element={<AuthPage />} />
 
         <Route

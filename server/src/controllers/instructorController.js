@@ -4,14 +4,12 @@ exports.addInstructor = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    // Validate
     if (!name || !email || !password) {
       return res.status(400).json({
         message: "All fields (name, email, password) are required.",
       });
     }
 
-    // Check existing
     const exists = await User.findOne({ email });
     if (exists) {
       return res.status(409).json({
@@ -19,11 +17,10 @@ exports.addInstructor = async (req, res) => {
       });
     }
 
-    // Create instructor
     const instructor = await User.create({
       name,
       email,
-      password, // TODO: hash password if needed
+      password,
       role: "instructor",
     });
 

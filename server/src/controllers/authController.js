@@ -40,20 +40,17 @@ exports.login = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // ✅ Check if role matches
     if (user.role !== role) {
       return res.status(403).json({
         message: `Access denied. This account is registered as '${user.role}', not '${role}'.`,
       });
     }
 
-    // ✅ Validate password
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
       return res.status(400).json({ message: "Invalid password" });
     }
 
-    // Generate Token
     const token = getAccessToken(user);
 
     res.status(200).json({

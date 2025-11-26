@@ -6,7 +6,6 @@ exports.addLecture = async (req, res) => {
   try {
     const { courseId, instructorId, date, time } = req.body;
 
-    // Validate fields
     if (!courseId || !instructorId || !date || !time) {
       return res.status(400).json({
         message:
@@ -14,19 +13,16 @@ exports.addLecture = async (req, res) => {
       });
     }
 
-    // Check course exists
     const course = await Course.findById(courseId);
     if (!course) {
       return res.status(404).json({ message: "Course not found." });
     }
 
-    // Check instructor exists
     const instructor = await User.findById(instructorId);
     if (!instructor || instructor.role !== "instructor") {
       return res.status(404).json({ message: "Instructor not found." });
     }
 
-    // Check if instructor already has lecture on this date
     const clash = await Lecture.findOne({ instructorId, date });
 
     if (clash) {
@@ -36,7 +32,6 @@ exports.addLecture = async (req, res) => {
       });
     }
 
-    // Create lecture
     const lecture = await Lecture.create({
       courseId,
       instructorId,
