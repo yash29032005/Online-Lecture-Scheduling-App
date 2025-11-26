@@ -29,22 +29,35 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json("All fields are required to be filled");
+    if (!email || !password || !role) {
+      return res.status(400).json({ message: "All fields are required" });
     }
 
     const user = await User.findOne({ email });
-    if (!user) return res.status(404).json("User not found");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
+    // ✅ Check if role matches
+    if (user.role !== role) {
+      return res.status(403).json({
+        message: `Access denied. This account is registered as '${user.role}', not '${role}'.`,
+      });
+    }
+
+    // ✅ Validate password
     const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.status(400).json("Invalid password");
+    if (!match) {
+      return res.status(400).json({ message: "Invalid password" });
+    }
 
+    // Generate Token
     const token = getAccessToken(user);
 
-    res.json({
-      message: "Login successful",
+    res.status(200).json({
+      message: `${role} login successful`,
       token,
       user: {
         id: user._id,
@@ -53,6 +66,7 @@ exports.login = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    console.error("Login error:", err);
+    res.status(500).json({ message: "Internal server error" });
   }
 };

@@ -3,10 +3,13 @@ import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import axiosClient from "../../utils/AxiosClient";
+import AddLectureModal from "./Modals/AddLectureModal";
+import { IoMdAdd } from "react-icons/io";
 
 const Lectures = () => {
   const [lectures, setLectures] = useState([]);
   const [search, setSearch] = useState("");
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     const fetchLectures = async () => {
@@ -43,6 +46,7 @@ const Lectures = () => {
       const result = await axiosClient.delete(
         `${import.meta.env.VITE_API_URL}/api/lecture/delete/${id}`
       );
+
       toast.success(result.data.message);
 
       // Remove deleted course from UI
@@ -55,6 +59,13 @@ const Lectures = () => {
 
   return (
     <div className="h-[calc(100vh-70px)] bg-primary py-4 px-8 text-white overflow-y-auto">
+      <AddLectureModal
+        open={openModal}
+        onClose={() => {
+          setOpenModal(false);
+        }}
+        setLectures={setLectures}
+      />
       <div className="font-bold text-lg my-4 ms-4">LECTURES</div>
 
       <div className="p-4 bg-secondary rounded-lg">
@@ -68,6 +79,14 @@ const Lectures = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
+          {/* Buttons */}
+          <button
+            className="px-4 py-2 bg-ternary rounded-md flex items-center gap-1"
+            onClick={() => setOpenModal(true)}
+          >
+            <IoMdAdd className="text-lg" />
+            Add
+          </button>
         </div>
 
         {/* ---------- TABLE ---------- */}

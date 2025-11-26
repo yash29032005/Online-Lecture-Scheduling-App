@@ -6,51 +6,58 @@ import axiosClient from "../utils/AxiosClient";
 
 const AuthPage = () => {
   const { setUser } = useAuth();
-  const [tab, setTab] = useState("login");
-  const [role, setRole] = useState("admin");
+  const [tab, setTab] = useState("login"); // login | signup(instructor only)
 
-  const [name, setName] = useState("");
+  const [role, setRole] = useState("admin"); // selected role for login only
+
+  const [name, setName] = useState(""); // for signup
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
 
+  // ----------------------------------------------------------
+  // LOGIN FUNCTION
+  // ----------------------------------------------------------
   const handleLogin = async (e) => {
-    try {
-      e.preventDefault();
+    e.preventDefault();
 
+    try {
       const result = await axiosClient.post(
         `${import.meta.env.VITE_API_URL}/api/auth/login`,
-        { email, password }
+        { email, password, role }
       );
 
-      let token = result.data.token;
+      const token = result.data.token;
+      const user = result.data.user;
 
       localStorage.setItem("token", token);
-
-      setUser(result.data.user);
+      setUser(user);
 
       toast.success(result.data.message);
 
-      if (role === "admin") {
-        navigate("/admin");
-      } else {
-        navigate("/instructor");
-      }
+      // Redirect based on role returned from backend
+      if (user.role === "admin") navigate("/admin");
+      else if (user.role === "instructor") navigate("/instructor");
+      else navigate("/");
 
       setEmail("");
-      setRole("admin");
       setPassword("");
     } catch (error) {
-      console.error(error);
       toast.error(error.response?.data?.message || "Login failed");
     }
   };
 
-  const handleSignup = async () => {
+  // ----------------------------------------------------------
+  // SIGNUP (Instructor Only)
+  // ----------------------------------------------------------
+  const handleSignup = async (e) => {
+    e.preventDefault();
+
     try {
       const result = await axiosClient.post(
         `${import.meta.env.VITE_API_URL}/api/auth/register`,
-        { name, email, password }
+        { name, email, password, role: "instructor" }
       );
 
       toast.success(result.data.message);
@@ -58,8 +65,8 @@ const AuthPage = () => {
       setName("");
       setEmail("");
       setPassword("");
+      setTab("login"); // after signup → go to login
     } catch (error) {
-      console.error(error);
       toast.error(error.response?.data?.message || "Signup failed");
     }
   };
@@ -81,12 +88,9 @@ const AuthPage = () => {
           </div>
         </div>
 
-        {/* TITLE */}
-        <h2 className="text-center text-2xl font-bold text-white mb-2">
-          SecureBank
-        </h2>
+        <h2 className="text-center text-2xl font-bold text-white mb-2">OLS</h2>
         <p className="text-center text-grey mb-6">
-          {tab === "login" ? "Sign in to your account" : "Create a new account"}
+          {tab === "login" ? "Sign in to your account" : "Instructor Sign Up"}
         </p>
 
         {/* TABS */}
@@ -106,10 +110,13 @@ const AuthPage = () => {
             }`}
             onClick={() => setTab("signup")}
           >
-            Sign Up
+            Instructor Sign Up
           </button>
         </div>
 
+        {/* ----------------------------------------------------------
+            LOGIN FORM
+        ---------------------------------------------------------- */}
         {tab === "login" && (
           <form onSubmit={handleLogin}>
             <label className="text-grey">Email</label>
@@ -132,34 +139,32 @@ const AuthPage = () => {
               required
             />
 
-            <div className="mb-6">
-              <label className="text-grey block mb-2">Login As</label>
+            {/* LOGIN ROLE SELECTOR */}
+            <label className="text-grey block mb-2">Login As</label>
+            <div className="flex gap-4 mb-4">
+              <button
+                type="button"
+                onClick={() => setRole("admin")}
+                className={`flex-1 py-2 rounded-lg ${
+                  role === "admin"
+                    ? "bg-ternary text-white"
+                    : "bg-secondary text-white"
+                }`}
+              >
+                Admin
+              </button>
 
-              <div className="flex gap-4">
-                <button
-                  type="button"
-                  onClick={() => setRole("admin")}
-                  className={`flex-1 py-2 rounded-lg ${
-                    role === "admin"
-                      ? "bg-ternary text-white"
-                      : "bg-secondary text-white"
-                  }`}
-                >
-                  Admin
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setRole("instructor")}
-                  className={`flex-1 py-2 rounded-lg ${
-                    role === "instructor"
-                      ? "bg-ternary text-white"
-                      : "bg-secondary text-white"
-                  }`}
-                >
-                  Instructor
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setRole("instructor")}
+                className={`flex-1 py-2 rounded-lg ${
+                  role === "instructor"
+                    ? "bg-ternary text-white"
+                    : "bg-secondary text-white"
+                }`}
+              >
+                Instructor
+              </button>
             </div>
 
             <button className="w-full bg-ternary hover:bg-secondary text-white p-3 rounded-lg font-semibold">
@@ -168,6 +173,9 @@ const AuthPage = () => {
           </form>
         )}
 
+        {/* ----------------------------------------------------------
+            SIGNUP FORM — ONLY FOR INSTRUCTOR
+        ---------------------------------------------------------- */}
         {tab === "signup" && (
           <form onSubmit={handleSignup}>
             <label className="text-grey">Full Name</label>
@@ -200,8 +208,9 @@ const AuthPage = () => {
               required
             />
 
+            {/* Role is always instructor for signup */}
             <button className="w-full bg-ternary hover:bg-secondary text-white p-3 rounded-lg font-semibold">
-              Create Account
+              Create Instructor Account
             </button>
           </form>
         )}
