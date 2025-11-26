@@ -9,9 +9,7 @@ const Dashboard = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [lectures, setLectures] = useState([]);
 
-  // ---------------------------------------------------------
-  // FETCH ALL LECTURES (same API for admin & instructor)
-  // ---------------------------------------------------------
+  // FETCH LECTURES
   useEffect(() => {
     const fetchLectures = async () => {
       try {
@@ -21,7 +19,6 @@ const Dashboard = () => {
 
         let allLectures = result.data.lectures || [];
 
-        // If instructor → filter only their lectures
         if (isInstructor) {
           allLectures = allLectures.filter(
             (lec) => lec.instructorId?._id === user.id
@@ -38,9 +35,7 @@ const Dashboard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ---------------------------------------------------------
   // CALENDAR LOGIC
-  // ---------------------------------------------------------
   const monthNames = [
     "January",
     "February",
@@ -67,16 +62,12 @@ const Dashboard = () => {
   const prevMonth = () => setCurrentDate(new Date(year, month - 1, 1));
   const nextMonth = () => setCurrentDate(new Date(year, month + 1, 1));
 
-  // Build dates array
   const dates = [];
   for (let x = 0; x < firstDay; x++) dates.push(null);
   for (let d = 1; d <= totalDays; d++) dates.push(d);
 
-  // ---------------------------------------------------------
   // GROUP LECTURES BY DAY
-  // ---------------------------------------------------------
   const lecturesByDate = {};
-
   lectures.forEach((lec) => {
     const d = new Date(lec.date);
     if (d.getFullYear() === year && d.getMonth() === month) {
@@ -87,29 +78,35 @@ const Dashboard = () => {
   });
 
   return (
-    <div className="h-[calc(100vh-70px)] bg-primary py-4 px-8 text-white overflow-y-auto">
-      <div className="font-bold text-lg mb-4 ms-4">
+    <div className="min-h-[calc(100vh-70px)] bg-primary py-4 px-3 sm:px-8 text-white overflow-y-auto">
+      <div className="font-bold text-xl sm:text-2xl mb-4 ms-2 sm:ms-4">
         {isInstructor ? "My Lecture Calendar" : "Lecture Calendar"}
       </div>
 
-      <div className="p-4 bg-secondary rounded-lg">
+      <div className="p-4 bg-secondary rounded-lg shadow-lg">
         {/* Month Header */}
-        <div className="flex justify-between items-center mb-4">
-          <button className="px-3 py-1 bg-ternary rounded" onClick={prevMonth}>
+        <div className="flex   justify-between items-center gap-3 mb-4">
+          <button
+            className="px-4 py-2 bg-ternary rounded hover:bg-primary transition"
+            onClick={prevMonth}
+          >
             Prev
           </button>
 
-          <h2 className="text-2xl font-bold">
+          <h2 className="text-lg sm:text-2xl font-bold text-center">
             {monthNames[month]} {year}
           </h2>
 
-          <button className="px-3 py-1 bg-ternary rounded" onClick={nextMonth}>
+          <button
+            className="px-4 py-2 bg-ternary rounded hover:bg-primary transition"
+            onClick={nextMonth}
+          >
             Next
           </button>
         </div>
 
         {/* Week Days */}
-        <div className="grid grid-cols-7 text-center font-semibold mb-2">
+        <div className="grid grid-cols-7 text-center font-semibold text-xs sm:text-sm mb-2">
           {days.map((d, i) => (
             <div key={i} className="py-2">
               {d}
@@ -118,32 +115,30 @@ const Dashboard = () => {
         </div>
 
         {/* Calendar Grid */}
-        <div className="grid grid-cols-7 gap-2 text-center">
+        <div className="grid grid-cols-7 gap-1 sm:gap-2 text-center">
           {dates.map((day, i) => (
             <div
               key={i}
-              className={`min-h-20 p-2 rounded text-sm border border-neutral-primary-soft ${
-                day ? "bg-neutral-primary-soft hover:bg-ternary" : ""
+              className={`min-h-20 sm:min-h-24 p-1 sm:p-2 rounded text-xs sm:text-sm border border-neutral-primary-soft ${
+                day ? "bg-neutral-primary-soft hover:bg-ternary" : "opacity-0"
               }`}
             >
               {day}
 
-              {/* LECTURE INFO */}
+              {/* Lecture Info */}
               {day && lecturesByDate[day] && (
-                <div className="mt-2 space-y-1 text-left text-xs">
+                <div className="mt-1 space-y-1 text-left text-[9px] sm:text-xs">
                   {lecturesByDate[day].map((lec, index) => (
-                    <div key={index} className="bg-black/30 p-1 rounded">
-                      <p className="font-semibold text-white">
-                        {lec.courseId?.name}
-                      </p>
+                    <div key={index} className="bg-black/40 p-1 rounded">
+                      <p className="font-semibold">{lec.courseId?.name}</p>
 
                       {!isInstructor && (
-                        <p className="text-gray-300 text-[10px]">
-                          Instructor: {lec.instructorId?.name}
+                        <p className="text-gray-300">
+                          {lec.instructorId?.name}
                         </p>
                       )}
 
-                      <p className="text-gray-400 text-[10px]">{lec.time}</p>
+                      <p className="text-gray-400">{lec.time}</p>
                     </div>
                   ))}
                 </div>

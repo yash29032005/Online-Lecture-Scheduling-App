@@ -93,10 +93,14 @@ const Navbar = ({ setOpen }) => {
 
         {/* Dropdown Menu */}
         {dropdown && (
-          <div className="absolute right-0 mt-2 w-40 bg-ternary border border-ternary rounded-lg shadow-lg z-30">
+          <div
+            className="absolute -bottom-12 right-0 mt-2 w-40 bg-ternary border border-ternary 
+          rounded-lg shadow-lg z-30"
+          >
             <button
               onClick={handleLogout}
-              className="w-full text-left px-4 py-2 hover:bg-red-600 text-gray-300 hover:text-white rounded-lg"
+              className="w-full text-left px-4 py-2 hover:bg-red-600 text-gray-300
+               hover:text-white rounded-lg"
             >
               Logout
             </button>
