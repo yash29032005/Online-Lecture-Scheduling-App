@@ -1,7 +1,7 @@
 # Online Lecture Scheduling App
 
 A Online Lecture Scheduling App built with React (frontend) and Node.js + MongoDB (backend).
-\
+
 ## Live Demo
 
 👉 Live Website: https://online-lecture-scheduling-app.onrender.com
